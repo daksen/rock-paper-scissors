@@ -1,0 +1,456 @@
+@blue: #19d9ff;
+@red: #ff1979;
+@scoreboard-max-width: 980px;
+@score-header-height: 74px;
+@skew: 40deg;
+
+*,
+*::before,
+*::after {
+   box-sizing: inherit;
+}
+
+h1,
+h2 {
+   font-weight: 400;
+}
+
+.scoreboard {
+   margin: auto;
+   max-width: @scoreboard-max-width;
+   overflow: hidden;
+}
+
+// -----------------------------------------------
+// Score Header
+
+.score-header {
+   position: relative;
+   height: @score-header-height;
+   overflow: hidden;
+}
+
+.score-header-background {
+   @bottom-border-width: 4px;
+   // The width of a skwed edge.
+   @skew-width: (ceil(tan(@skew) * @score-header-height));
+
+   position: absolute;
+   display: flex;
+   height: 100%;
+
+   // Hide the outer skewd edges by making the background element wider than its parent.
+   // (Add the bottom-border-width to fix the tiny border cut-off on the right side.)
+   width: calc(100% ~"+"@skew-width + @bottom-border-width);
+   left: -((@skew-width + @bottom-border-width) / 2);
+
+   .score-header-background__left,
+   .score-header-background__right {
+      position: relative;
+      flex: 1 1 100%;
+      overflow: hidden;
+      border-bottom: @bottom-border-width solid #fff;
+      transform: skewX(-@skew);
+
+      // Gradient
+      &::before {
+         content: "";
+         position: absolute;
+         width: 100%;
+         height: 100%;
+
+         transform: skewX(@skew);
+      }
+
+      // Overlay lines
+      &::after {
+         content: "";
+         position: absolute;
+         width: 100%;
+         height: 100%;
+         opacity: 0.35;
+         background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeAgMAAABGXkYxAAAACVBMVEUAAAD///8AAABzxoNxAAAAAnRSTlMAAHaTzTgAAAAlSURBVHhe3cmhEQAACMPAjIhhv+pOiahAsAGvchc6asMhjvdrAFlGOgM9VYUmAAAAAElFTkSuQmCC');
+      }
+   }
+
+   .score-header-background__left {
+      margin-right: 5px;
+      border-color: @blue;
+
+      &::before {
+         right: -(@skew-width / 2);
+         background: linear-gradient(to left, @blue (@skew-width / 2), #000 60%);
+      }
+   }
+
+   .score-header-background__right {
+      margin-left: 5px;
+      border-color: @red;
+
+      &::before {
+         left: -(@skew-width / 2);
+         background: linear-gradient(to right, @red (@skew-width / 2), #000 60%);
+      }
+   }
+
+   .score-header-background__logo {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      width: 60px;
+      height: 60px;
+      border: 5px solid #000;
+      border-radius: 100%;
+      background-color: #000;
+      background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4yLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAyNCAxMDI0OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZGlzcGxheTpub25lO30NCgkuc3Qxe2Rpc3BsYXk6aW5saW5lO2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDJ7ZGlzcGxheTppbmxpbmU7fQ0KCS5zdDN7ZGlzcGxheTppbmxpbmU7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo1MDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NHtkaXNwbGF5OmlubGluZTtmaWxsOnVybCgjU1ZHSURfMl8pO30NCgkuc3Q1e2Rpc3BsYXk6aW5saW5lO2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2e2Rpc3BsYXk6aW5saW5lO2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6NTA7c3Ryb2tlLWxpbmVjYXA6c3F1YXJlO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0N3tmaWxsOiNGRkZGRkY7fQ0KCS5zdDh7ZGlzcGxheTppbmxpbmU7ZmlsbDp1cmwoI1NWR0lEXzNfKTt9DQoJLnN0OXtmaWxsOnVybCgjU1ZHSURfNF8pO30NCjwvc3R5bGU+DQo8ZyBpZD0iTGF5ZXJfMiIgY2xhc3M9InN0MCI+DQoJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8xXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMiIgeTE9IjUxMiIgeDI9IjEwMTIiIHkyPSI1MTIiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBEMURBIi8+DQoJCTxzdG9wICBvZmZzZXQ9IjAuNDkiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEQxREEiLz4NCgkJPHN0b3AgIG9mZnNldD0iMC41MSIgc3R5bGU9InN0b3AtY29sb3I6I0YwMDA2RSIvPg0KCQk8c3RvcCAgb2Zmc2V0PSIxIiBzdHlsZT0ic3RvcC1jb2xvcjojRjAwMDZFIi8+DQoJPC9saW5lYXJHcmFkaWVudD4NCgk8Y2lyY2xlIGNsYXNzPSJzdDEiIGN4PSI1MTIiIGN5PSI1MTIiIHI9IjUwMCIvPg0KCTxjaXJjbGUgY2xhc3M9InN0MiIgY3g9IjUxMiIgY3k9IjUxMiIgcj0iNDUwLjEiLz4NCgk8bGluZSBjbGFzcz0ic3QzIiB4MT0iNTEyIiB5MT0iMCIgeDI9IjUxMiIgeTI9IjEwMjQiLz4NCjwvZz4NCjxnIGlkPSJMYXllcl8yX2NvcHlfMiIgY2xhc3M9InN0MCI+DQoJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8yXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMiIgeTE9IjUxMiIgeDI9IjEwMTIiIHkyPSI1MTIiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBEMURBIi8+DQoJCTxzdG9wICBvZmZzZXQ9IjAuNDkiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEQxREEiLz4NCgkJPHN0b3AgIG9mZnNldD0iMC41MSIgc3R5bGU9InN0b3AtY29sb3I6I0YwMDA2RSIvPg0KCQk8c3RvcCAgb2Zmc2V0PSIxIiBzdHlsZT0ic3RvcC1jb2xvcjojRjAwMDZFIi8+DQoJPC9saW5lYXJHcmFkaWVudD4NCgk8Y2lyY2xlIGNsYXNzPSJzdDQiIGN4PSI1MTIiIGN5PSI1MTIiIHI9IjUwMCIvPg0KCTxjaXJjbGUgY2xhc3M9InN0MiIgY3g9IjUxMiIgY3k9IjUxMiIgcj0iNDEyLjUiLz4NCgk8bGluZSBjbGFzcz0ic3Q1IiB4MT0iNTEyIiB5MT0iMCIgeDI9IjUxMiIgeTI9IjEwMjQiLz4NCjwvZz4NCjxnIGlkPSJMYXllcl80X2NvcHkiIGNsYXNzPSJzdDAiPg0KCTxsaW5lIGNsYXNzPSJzdDYiIHgxPSIzNDIuMiIgeTE9IjcxNC45IiB4Mj0iNDU1LjEiIHkyPSIyNjMuMSIvPg0KCTxwb2x5bGluZSBjbGFzcz0ic3QzIiBwb2ludHM9IjUwNi4yLDM3NC4xIDc0Ny4yLDUxNy4yIDUwNi4yLDY2MC4yIAkiLz4NCgk8ZyBpZD0iTGF5ZXJfNiIgY2xhc3M9InN0MiI+DQoJCTxyZWN0IHg9IjMwOC40IiB5PSI3MTQuOSIgY2xhc3M9InN0NyIgd2lkdGg9IjE4MC41IiBoZWlnaHQ9IjY1LjEiLz4NCgkJPHJlY3QgeD0iNDg4LjkiIHk9IjMzMC4yIiBjbGFzcz0ic3Q3IiB3aWR0aD0iMjguNSIgaGVpZ2h0PSIzNzQiLz4NCgkJPHJlY3QgeD0iNzQ3LjIiIHk9IjQ2NS43IiBjbGFzcz0ic3Q3IiB3aWR0aD0iNTAuMSIgaGVpZ2h0PSIxMDIuOSIvPg0KCQk8cmVjdCB4PSIzMDguNCIgeT0iMTk4IiBjbGFzcz0ic3Q3IiB3aWR0aD0iMTgwLjUiIGhlaWdodD0iNjUuMSIvPg0KCTwvZz4NCjwvZz4NCjxnIGlkPSJMYXllcl8yX2NvcHkiIGNsYXNzPSJzdDAiPg0KCQ0KCQk8bGluZWFyR3JhZGllbnQgaWQ9IlNWR0lEXzNfIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjEyIiB5MT0iNTEyIiB4Mj0iMTAxMiIgeTI9IjUxMiIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCgwLjc2NiAwLjY0MjggLTAuNjQyOCAwLjc2NiA0NDguODkyNSAtMjA5LjMyMikiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBEMURBIi8+DQoJCTxzdG9wICBvZmZzZXQ9IjAuNDkiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEQxREEiLz4NCgkJPHN0b3AgIG9mZnNldD0iMC41MSIgc3R5bGU9InN0b3AtY29sb3I6I0YwMDA2RSIvPg0KCQk8c3RvcCAgb2Zmc2V0PSIxIiBzdHlsZT0ic3RvcC1jb2xvcjojRjAwMDZFIi8+DQoJPC9saW5lYXJHcmFkaWVudD4NCgk8cGF0aCBjbGFzcz0ic3Q4IiBkPSJNMTcxLjksODc4LjVjLTE5NC4zLTE4MC0yMTUtNDgyLjgtNDIuOS02ODcuOXM0NzMuOS0yMzcuMyw2ODQuOS03Ny4ybC0zMi4xLDM4LjMNCgkJYy0xODkuOC0xNDIuNC00NjAuMS0xMTMtNjE0LjUsNzFTMzAuOCw2NzcuOSwyMDQsODQwLjJMMTcxLjksODc4LjV6IE04NTIuMSwxNDUuNUw4MjAsMTgzLjhjMTczLjIsMTYyLjIsMTkxLjEsNDMzLjUsMzYuOCw2MTcuNQ0KCQlzLTQyNC42LDIxMy40LTYxNC41LDcxbC0zMi4xLDM4LjNjMjExLDE2MC4xLDUxMi44LDEyNy45LDY4NC45LTc3LjJTMTA0Ni40LDMyNS41LDg1Mi4xLDE0NS41eiIvPg0KPC9nPg0KPGcgaWQ9IkxheWVyXzJfY29weV80Ij4NCgkNCgkJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF80XyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMS41IiB5MT0iNTEyIiB4Mj0iMTAxMS41IiB5Mj0iNTEyIiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDAuNzY2IDAuNjQyOCAtMC42NDI4IDAuNzY2IDQ0OC43NzU1IC0yMDkuMDAwNikiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojMjFFM0ZGIi8+DQoJCTxzdG9wICBvZmZzZXQ9IjAuNDkiIHN0eWxlPSJzdG9wLWNvbG9yOiMyMUUzRkYiLz4NCgkJPHN0b3AgIG9mZnNldD0iMC41MSIgc3R5bGU9InN0b3AtY29sb3I6I0ZGMUI4MiIvPg0KCQk8c3RvcCAgb2Zmc2V0PSIxIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYxQjgyIi8+DQoJPC9saW5lYXJHcmFkaWVudD4NCgk8cGF0aCBjbGFzcz0ic3Q5IiBkPSJNMTQ0LjcsODUxLjlDLTI0LDY3MC4yLTM1LjQsMzg1LjksMTI4LjUsMTkwLjZzNDQ1LjgtMjMzLjQsNjU0LTk4LjhsLTU2LjgsNjcuNw0KCQljLTE3MS0xMDQuMi0zOTcuNC03MC44LTUzMC4yLDg3LjRzLTEyNi4zLDM4Nyw2LDUzNy4zTDE0NC43LDg1MS45eiBNODc4LjMsMTcyLjFsLTU2LjgsNjcuN2MxMzMuMSwxNTEsMTM4LjgsMzc5LjEsNiw1MzcuMw0KCQlzLTM1OC40LDE5Mi4zLTUzMC4yLDg3LjRsLTU2LjgsNjcuN2MyMDksMTM1LjIsNDkwLjIsOTYuNSw2NTQtOTguOFMxMDQ3LjcsMzU0LjQsODc4LjMsMTcyLjF6Ii8+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfNF9jb3B5XzIiPg0KCTxnIGlkPSJMYXllcl82X2NvcHkiPg0KCQk8Zz4NCgkJCTxwb2x5Z29uIGNsYXNzPSJzdDciIHBvaW50cz0iNDI5LjMsMjYzIDMxNi41LDcxNSAzNjgsNzE1IDQ4MC44LDI2MyAJCQkiLz4NCgkJCTxwb2x5Z29uIGNsYXNzPSJzdDciIHBvaW50cz0iNzQ3LDQ4OC4xIDUxOC43LDM1Mi42IDUxNywzNTUuMiA1MTcsNDA5LjkgNjk3LjcsNTE3LjIgNTE3LDYyNC41IDUxNyw2NzkuMSA1MTguNyw2ODEuNyA3NDcsNTQ2LjMgDQoJCQkJCQkJIi8+DQoJCTwvZz4NCgk8L2c+DQo8L2c+DQo8L3N2Zz4NCg==");
+   }
+}
+
+.score-header-foreground {
+   position: absolute;
+   display: flex;
+   height: 100%;
+   width: 100%;
+
+   .score-header-foreground__left,
+   .score-header-foreground__right {
+      display: flex;
+      margin: 0 40px;
+      flex: 1 1 100%;
+      align-items: baseline;
+   }
+
+   .score-header-foreground__left {
+      .score-header-foreground__title {
+         color: @blue;
+      }
+
+      .score-header-foreground__score {
+         margin-right: 20px;
+      }
+   }
+
+   .score-header-foreground__right {
+      flex-direction: row-reverse;
+      text-align: right;
+
+      .score-header-foreground__title {
+         color: @red;
+      }
+
+      .score-header-foreground__score {
+         margin-left: 20px;
+      }
+   }
+
+   .score-header-foreground__title,
+   .score-header-foreground__score,
+   .score-header-foreground__win {
+      margin: 0 10px;
+      line-height: @score-header-height - 5px;
+      text-transform: uppercase;
+   }
+
+   .score-header-foreground__title {
+      margin: 0;
+      flex: 1 1 auto;
+      font-size: 36px;
+   }
+
+   .score-header-foreground__score {
+      order: 1;
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.75), 0 0 8px rgba(255, 255, 255, 0.45);
+      font-size: 56px;
+   }
+
+   .score-header-foreground__win {
+      font-size: 18px;
+   }
+}
+
+// -----------------------------------------------
+// Player List
+
+.player-list {
+   display: flex;
+   padding: 0;
+   flex-flow: column;
+   list-style: none;
+}
+
+.player-row {
+   display: flex;
+   margin: 20px 0;
+   flex: 1 1 auto;
+   align-items: center;
+}
+
+.player {
+   display: flex;
+   padding: 20px;
+   min-width: 0; // Used to truncate text with flex.
+   flex: 1 1 auto;
+   align-items: center;
+
+   &.player--left {
+      padding-left: 40px;
+
+      .player__avatar {
+         margin-right: 20px;
+         border-color: @blue;
+      }
+   }
+
+   &.player--right {
+      padding-right: 40px;
+      text-align: right;
+      flex-flow: row-reverse;
+
+      .player__avatar {
+         margin-left: 20px;
+         border-color: @red;
+      }
+   }
+
+   .player__avatar {
+      position: relative;
+      min-height: 60px;
+      min-width: 60px;
+      overflow: hidden;
+
+      border: 3px solid #fff;
+      border-radius: 100%;
+      background-color: #333;
+
+      &::before {
+         content: "";
+         position: absolute;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         opacity: 0.5;
+         background-size: cover;
+         transform: scale(1.15) translateY(3px);
+      }
+   }
+
+   .player__username {
+      font-size: 24px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+   }
+}
+
+.language {
+   font-size: 24px;
+}
+
+// -----------------------------------------------
+// Media Queries
+
+@media (max-width: 650px) {
+   body {
+      margin: 40px 0;
+   }
+}
+
+// -----------------------------------------------
+// Animations
+
+@keyframes pulse {
+   from {
+      opacity: 1;
+   }
+
+   to {
+      opacity: 0.8;
+   }
+}
+
+// Pulse
+.score-header-background__left::before,
+.score-header-background__right::before {
+   animation: pulse 2.5s infinite alternate ease-in-out;
+}
+
+// Skew
+.score-header-background {
+   &.anim__skew {
+
+      .score-header-background__left,
+      .score-header-background__right {
+         transform: skewX(0);
+
+         &::before {
+            transform: skewX(0);
+         }
+      }
+
+      .score-header-background__logo {
+         will-change: transform; // Fix jagged edges in Chrome.
+         transform: rotate(-40deg);
+      }
+   }
+
+   &.anim__skew--during {
+
+      .score-header-background__left,
+      .score-header-background__right,
+      .score-header-background__left::before,
+      .score-header-background__right::before,
+      .score-header-background__logo {
+         transition: transform 150ms ease-in;
+      }
+   }
+}
+
+// Header title
+.score-header-foreground {
+   .score-header-foreground__left {
+      .anim__header-title {
+         transform: translateX(-(@scoreboard-max-width / 2));
+      }
+   }
+
+   .score-header-foreground__right {
+      .anim__header-title {
+         transform: translateX((@scoreboard-max-width / 2));
+      }
+   }
+
+   .score-header-foreground__score,
+   .score-header-foreground__win,
+   .score-header-foreground__title {
+      &.anim__header-title--during {
+         transition: 250ms ease-out;
+
+      }
+   }
+}
+
+// Header background
+.score-header-background {
+   &.anim__header {
+      .score-header-background__left {
+         transform: translateX(-(@scoreboard-max-width / 2));
+      }
+
+      .score-header-background__right {
+         transform: translateX((@scoreboard-max-width / 2));
+      }
+   }
+
+   &.anim__header--during {
+
+      .score-header-background__left,
+      .score-header-background__right {
+         transition: transform 250ms ease-in;
+      }
+   }
+}
+
+// Logo entry
+.score-header-background .score-header-background__logo {
+   &.anim__logo-entry {
+      opacity: 0;
+      transform: rotate(-40deg - (1440 - 360));
+   }
+
+   &.anim__logo-entry--during {
+      transition: transform 3000ms linear, opacity 500ms ease-out;
+   }
+}
+
+// Logo text
+.score-header-background .score-header-background__logo {
+   &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      border-radius: 100%;
+      background-color: #000;
+      transform: scale(0.65);
+   }
+
+   &.anim__logo-center {
+      &::after {
+         opacity: 1;
+      }
+   }
+
+   &.anim__logo-center--during {
+      &::after {
+         transition: opacity 250ms ease-in;
+      }
+   }
+
+}
+
+// Player rows
+.player-row {
+   &.anim__player-row {
+      .player {
+         opacity: 0;
+      }
+
+      .player--left {
+         transform: translateX(-(@scoreboard-max-width / 2));
+      }
+
+      .player--right {
+         transform: translateX((@scoreboard-max-width / 2));
+      }
+
+      .language {
+         opacity: 0;
+         transform: scale(0.75);
+      }
+   }
+
+   &.anim__player-row--during {
+      .player {
+         transition: transform 250ms ease-out, opacity 250ms ease-in 75ms;
+      }
+
+      .language {
+         transition: all 150ms ease-out 100ms;
+      }
+   }
+}
+
+// Fade out
+.scoreboard {
+   opacity: 0;
+   transform: scale(0.9);
+
+   &.anim__fade-out {
+      opacity: 1;
+      transform: none;
+   }
+
+   &.anim__fade-out--during {
+      transition: all 500ms ease-out;
+   }
+}
+
+// Replay button
+.replay-button {
+   visibility: visible;
+
+   &.anim__replay-button {
+      visibility: hidden;
+      opacity: 0;
+   }
+
+   &.anim__replay-button--during {
+      transition: opacity 250ms ease-in;
+   }
+}
